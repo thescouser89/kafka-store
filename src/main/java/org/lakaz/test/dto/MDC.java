@@ -14,4 +14,6 @@ public class MDC {
     String requestContext;
     int duration;
     String userId;
+
+    String processStageName;
 }

@@ -9,4 +9,10 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KafkaMessageDTO {
 
+    MDC mdc;
+
+    /**
+     * Value is in milliseconds
+     */
+    long operationTook;
 }
