@@ -1,3 +1,20 @@
+/**
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2019 Red Hat, Inc., and individual contributors
+ * as indicated by the @author tags.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.jboss.pnc.kafkastore.rest;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -17,8 +34,8 @@ import static org.hamcrest.Matchers.*;
 @QuarkusTest
 class MainRestTest {
 
-    private String buildConfigId =  "8";
-    private String buildId =  "20";
+    private String buildConfigId = "8";
+    private String buildId = "20";
     private int firstBuildIdTimes = 10;
 
     private String secondBuildConfigId = buildConfigId;
@@ -49,16 +66,10 @@ class MainRestTest {
         BuildStageRecord.deleteAll();
     }
 
-
     @Test
     void getBuildMetricsForBuildId() {
-        Response response = given()
-                .when().get("/build/" + buildId)
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON)
-                .extract()
-                .response();
+        Response response = given().when().get("/build/" + buildId).then().statusCode(200).contentType(ContentType.JSON)
+                .extract().response();
 
         assertThat(response.jsonPath().getList("").size()).isEqualTo(firstBuildIdTimes);
     }
@@ -66,29 +77,18 @@ class MainRestTest {
     @Test
     void getBuildMetricsForNonExistentBuildIdShouldBeEmpty() {
 
-        Response response = given()
-                .when().get("/build/" + "idonotexist")
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON)
-                .extract()
-                .response();
+        Response response = given().when().get("/build/" + "idonotexist").then().statusCode(200)
+                .contentType(ContentType.JSON).extract().response();
 
         assertThat(response.jsonPath().getList("").size()).isEqualTo(0);
     }
 
     @Test
     void getBuildMetricsForBuildConfigId() {
-        given()
-                .when().get("/build-config/" + buildConfigId)
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON)
-                .body("$", hasKey(buildId))
-                .body("$", hasKey(secondBuildId))
+        given().when().get("/build-config/" + buildConfigId).then().statusCode(200).contentType(ContentType.JSON)
+                .body("$", hasKey(buildId)).body("$", hasKey(secondBuildId))
                 .body(buildId + ".size()", is(firstBuildIdTimes))
                 .body(secondBuildId + ".size()", is(secondBuildIdTimes));
-
 
     }
 
