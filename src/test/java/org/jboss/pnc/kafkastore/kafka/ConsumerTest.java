@@ -1,8 +1,8 @@
-package org.lakaz.test.kafka;
+package org.jboss.pnc.kafkastore.kafka;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
-import org.lakaz.test.model.BuildStageRecord;
+import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
 import javax.inject.Inject;
 

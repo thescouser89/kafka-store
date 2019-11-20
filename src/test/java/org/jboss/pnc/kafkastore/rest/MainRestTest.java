@@ -1,4 +1,4 @@
-package org.lakaz.test.rest;
+package org.jboss.pnc.kafkastore.rest;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -6,7 +6,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.lakaz.test.model.BuildStageRecord;
+import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
 import javax.transaction.Transactional;
 

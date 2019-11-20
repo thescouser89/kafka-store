@@ -1,10 +1,10 @@
-package org.lakaz.test.kafka;
+package org.jboss.pnc.kafkastore.kafka;
 
 import io.reactivex.Flowable;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
-import org.lakaz.test.mapper.BuildStageRecordMapper;
-import org.lakaz.test.dto.BuildStageRecordDTO;
+import org.jboss.pnc.kafkastore.dto.KafkaMessageDTO;
+import org.jboss.pnc.kafkastore.mapper.BuildStageRecordMapper;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -27,8 +27,8 @@ public class KafkaMessageGenerator {
         return Flowable.interval(200, TimeUnit.MILLISECONDS)
                 .map(tick -> {
 
-                    BuildStageRecordDTO buildStageRecord = factory.manufacturePojo(BuildStageRecordDTO.class);
-                    String data = mapper.toJsonString(buildStageRecord);
+                    KafkaMessageDTO kafkaMessageDTO = factory.manufacturePojo(KafkaMessageDTO.class);
+                    String data = mapper.toJsonString(kafkaMessageDTO);
 
                     log.debug("Sending: {}", data);
                     return data;

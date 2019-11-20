@@ -1,4 +1,4 @@
-package org.lakaz.test.dto;
+package org.jboss.pnc.kafkastore.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

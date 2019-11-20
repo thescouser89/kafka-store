@@ -1,9 +1,8 @@
-package org.lakaz.test.mapper;
+package org.jboss.pnc.kafkastore.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.lakaz.test.dto.BuildStageRecordDTO;
-import org.lakaz.test.dto.KafkaMessageDTO;
-import org.lakaz.test.model.BuildStageRecord;
+import org.jboss.pnc.kafkastore.dto.KafkaMessageDTO;
+import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
@@ -13,7 +12,7 @@ public class BuildStageRecordMapper {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    public BuildStageRecord map(String jsonString) throws BuildStageRecordMapperException {
+    public BuildStageRecord mapKafkaMsgToBuildStageRecord(String jsonString) throws BuildStageRecordMapperException {
 
         try {
             KafkaMessageDTO kafkaMessageDTO =  mapper.readValue(jsonString, KafkaMessageDTO.class);
@@ -28,10 +27,10 @@ public class BuildStageRecordMapper {
         }
     }
 
-    public String toJsonString(BuildStageRecordDTO buildStageRecord) throws BuildStageRecordMapperException {
+    public String toJsonString(KafkaMessageDTO kafkaMessageDTO) throws BuildStageRecordMapperException {
 
         try {
-            return mapper.writeValueAsString(buildStageRecord);
+            return mapper.writeValueAsString(kafkaMessageDTO);
         } catch(IOException e) {
             throw new BuildStageRecordMapperException(e);
         }

@@ -1,4 +1,4 @@
-package org.lakaz.test.mapper;
+package org.jboss.pnc.kafkastore.mapper;
 
 public class BuildStageRecordMapperException extends Exception {
 

@@ -1,6 +1,7 @@
-package org.lakaz.test.model;
+package org.jboss.pnc.kafkastore.model;
 
 import io.quarkus.test.junit.QuarkusTest;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,10 +51,10 @@ class BuildStageRecordTest {
         assertThat(result.keySet())
                 .as("check if result contains proper build id size")
                 .hasSize(2);
-        assertThat(result.get(buildId))
+        Assertions.assertThat(result.get(buildId))
                 .as("check if each build id has the proper number of stages")
                 .hasSize(11);
-        assertThat(result.get(buildIdSecond))
+        Assertions.assertThat(result.get(buildIdSecond))
                 .as("check if each build id has the proper number of stages")
                 .hasSize(7);
 
@@ -61,7 +62,7 @@ class BuildStageRecordTest {
         assertThat(resultOne.keySet())
                 .as("check if result returns only 1 build id")
                 .hasSize(1);
-        assertThat(resultOne.get(buildIdSecond))
+        Assertions.assertThat(resultOne.get(buildIdSecond))
                 .as("check if each build id has the proper number of stages")
                 .isNotNull()
                 .hasSize(7);
@@ -71,7 +72,7 @@ class BuildStageRecordTest {
         assertThat(buildConfigSecondResult.keySet())
                 .as("check if result contains proper build id size")
                 .hasSize(1);
-        assertThat(buildConfigSecondResult.get(buildIdThird))
+        Assertions.assertThat(buildConfigSecondResult.get(buildIdThird))
                 .as("check if each build id has the proper number of stages")
                 .hasSize(8);
     }

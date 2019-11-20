@@ -1,9 +1,9 @@
-package org.lakaz.test.kafka;
+package org.jboss.pnc.kafkastore.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.lakaz.test.mapper.BuildStageRecordMapper;
-import org.lakaz.test.model.BuildStageRecord;
+import org.jboss.pnc.kafkastore.mapper.BuildStageRecordMapper;
+import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -29,8 +29,8 @@ public class Consumer {
     @Incoming("duration")
     public void consume(String jsonString) throws Exception {
 
-        log.debug("Consuming data! {}", jsonString);
-        BuildStageRecord buildStageRecord = mapper.map(jsonString);
+        BuildStageRecord buildStageRecord = mapper.mapKafkaMsgToBuildStageRecord(jsonString);
+        log.info("Incoming: {}", jsonString);
 
         // TODO: handle error better
         // do this because method running in an IO thread and we can only store a POJO in a worker thread

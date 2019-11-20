@@ -1,4 +1,4 @@
-package org.lakaz.test.dto;
+package org.jboss.pnc.kafkastore.dto;
 
 import lombok.Getter;
 import lombok.Setter;

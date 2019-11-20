@@ -1,6 +1,6 @@
-package org.lakaz.test.rest;
+package org.jboss.pnc.kafkastore.rest;
 
-import org.lakaz.test.model.BuildStageRecord;
+import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
