@@ -44,6 +44,9 @@ public class KafkaMessageGenerator {
         return Flowable.interval(200, TimeUnit.MILLISECONDS).map(tick -> {
 
             KafkaMessageDTO kafkaMessageDTO = factory.manufacturePojo(KafkaMessageDTO.class);
+            kafkaMessageDTO.setLoggerName("org.jboss.pnc._userlog_.process-stage-update");
+            kafkaMessageDTO.getMdc().setProcessStageStep("END");
+
             String data = mapper.toJsonString(kafkaMessageDTO);
 
             log.debug("Sending: {}", data);
