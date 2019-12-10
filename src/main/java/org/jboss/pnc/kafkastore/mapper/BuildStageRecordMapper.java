@@ -18,26 +18,42 @@
 package org.jboss.pnc.kafkastore.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.jboss.pnc.kafkastore.dto.KafkaMessageDTO;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
+import java.util.Optional;
 
 @ApplicationScoped
+@Slf4j
 public class BuildStageRecordMapper {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    public BuildStageRecord mapKafkaMsgToBuildStageRecord(String jsonString) throws BuildStageRecordMapperException {
+    public Optional<BuildStageRecord> mapKafkaMsgToBuildStageRecord(String jsonString)
+            throws BuildStageRecordMapperException {
 
         try {
             KafkaMessageDTO kafkaMessageDTO = mapper.readValue(jsonString, KafkaMessageDTO.class);
-            BuildStageRecord buildStageRecord = new BuildStageRecord();
-            buildStageRecord.setDuration(kafkaMessageDTO.getOperationTook());
-            buildStageRecord.setBuildStage(kafkaMessageDTO.getMdc().getProcessStageName());
-            buildStageRecord.setBuildId(kafkaMessageDTO.getMdc().getProcessContext());
-            return buildStageRecord;
+
+            if (kafkaMessageDTO.getLoggerName() != null
+                    && kafkaMessageDTO.getLoggerName().equals("org.jboss.pnc._userlog_.process-stage-update")
+                    && kafkaMessageDTO.getMdc().getProcessStageStep().equals("END")) {
+
+                BuildStageRecord buildStageRecord = new BuildStageRecord();
+                buildStageRecord.setDuration(kafkaMessageDTO.getOperationTook());
+                if (kafkaMessageDTO.getMdc() != null) {
+                    buildStageRecord.setBuildStage(kafkaMessageDTO.getMdc().getProcessStageName());
+                    buildStageRecord.setBuildId(kafkaMessageDTO.getMdc().getProcessContext());
+                    return Optional.of(buildStageRecord);
+                } else {
+                    return Optional.empty();
+                }
+            } else {
+                return Optional.empty();
+            }
 
         } catch (IOException e) {
             throw new BuildStageRecordMapperException(e);

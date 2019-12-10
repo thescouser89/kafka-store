@@ -20,9 +20,11 @@ package org.jboss.pnc.kafkastore.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KafkaMessageDTO {
 
@@ -32,4 +34,5 @@ public class KafkaMessageDTO {
      * Value is in milliseconds
      */
     long operationTook;
+    String loggerName;
 }
