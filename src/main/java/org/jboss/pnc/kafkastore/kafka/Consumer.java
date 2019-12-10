@@ -25,6 +25,7 @@ import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -45,15 +46,19 @@ public class Consumer {
      */
     @Incoming("duration")
     public void consume(String jsonString) throws Exception {
+        System.out.print(".");
 
-        BuildStageRecord buildStageRecord = mapper.mapKafkaMsgToBuildStageRecord(jsonString);
-        log.info("Incoming: {}", jsonString);
+        // log.info("Incoming: {}", jsonString);
+        Optional<BuildStageRecord> buildStageRecord = mapper.mapKafkaMsgToBuildStageRecord(jsonString);
 
         // TODO: handle error better
         // do this because method running in an IO thread and we can only store a POJO in a worker thread
-        CompletableFuture.runAsync(() -> store(buildStageRecord)).exceptionally(e -> {
-            e.printStackTrace();
-            return null;
+        buildStageRecord.ifPresent(br -> {
+            log.info(br.toString());
+            CompletableFuture.runAsync(() -> store(br)).exceptionally(e -> {
+                e.printStackTrace();
+                return null;
+            });
         });
     }
 
