@@ -26,6 +26,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Entity;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,8 +44,10 @@ public class BuildStageRecord extends PanacheEntity {
     String buildId;
     String buildConfigId;
 
+    Instant timestamp;
+
     public static List<BuildStageRecord> getForBuildId(String buildId) {
-        return list("buildId", Sort.by("id").ascending(), buildId);
+        return list("buildId", Sort.by("timestamp").ascending(), buildId);
     }
 
     public static List<BuildStageRecord> getForBuildId(int buildId) {

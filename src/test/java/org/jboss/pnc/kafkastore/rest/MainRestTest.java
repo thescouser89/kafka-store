@@ -27,6 +27,8 @@ import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
 import javax.transaction.Transactional;
 
+import java.time.Instant;
+
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -99,6 +101,7 @@ class MainRestTest {
         a.setBuildConfigId(buildConfigId);
         a.setBuildStage(buildStage);
         a.setDuration(duration);
+        a.setTimestamp(Instant.now());
         a.persist();
     }
 }

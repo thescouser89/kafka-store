@@ -20,6 +20,8 @@ package org.jboss.pnc.kafkastore.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 public class BuildStageRecordDTO {
@@ -28,4 +30,5 @@ public class BuildStageRecordDTO {
     long duration;
     String buildId;
     String buildConfigId;
+    Instant timestamp;
 }

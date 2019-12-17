@@ -17,7 +17,9 @@
  */
 package org.jboss.pnc.kafkastore.mapper;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.pnc.kafkastore.dto.KafkaMessageDTO;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
@@ -30,7 +32,9 @@ import java.util.Optional;
 @Slf4j
 public class BuildStageRecordMapper {
 
-    ObjectMapper mapper = new ObjectMapper();
+    ObjectMapper mapper = new ObjectMapper().findAndRegisterModules()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
 
     public Optional<BuildStageRecord> mapKafkaMsgToBuildStageRecord(String jsonString)
             throws BuildStageRecordMapperException {
@@ -44,6 +48,7 @@ public class BuildStageRecordMapper {
 
                 BuildStageRecord buildStageRecord = new BuildStageRecord();
                 buildStageRecord.setDuration(kafkaMessageDTO.getOperationTook());
+                buildStageRecord.setTimestamp(kafkaMessageDTO.getTimestamp());
                 if (kafkaMessageDTO.getMdc() != null) {
                     buildStageRecord.setBuildStage(kafkaMessageDTO.getMdc().getProcessStageName());
                     buildStageRecord.setBuildId(kafkaMessageDTO.getMdc().getProcessContext());
