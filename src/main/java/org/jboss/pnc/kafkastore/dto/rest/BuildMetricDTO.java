@@ -34,7 +34,7 @@ public class BuildMetricDTO {
         this.name = name;
     }
 
-    public void addData(long duration) {
+    public void addData(Long duration) {
         data.add(duration);
     }
 }
