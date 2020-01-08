@@ -51,7 +51,7 @@ public class BuildStageRecordMapper {
                 buildStageRecord.setTimestamp(kafkaMessageDTO.getTimestamp());
                 if (kafkaMessageDTO.getMdc() != null) {
                     buildStageRecord.setBuildStage(kafkaMessageDTO.getMdc().getProcessStageName());
-                    buildStageRecord.setBuildId(kafkaMessageDTO.getMdc().getProcessContext());
+                    buildStageRecord.setBuildId(buildId(kafkaMessageDTO.getMdc().getProcessContext()));
                     return Optional.of(buildStageRecord);
                 } else {
                     return Optional.empty();
@@ -74,4 +74,21 @@ public class BuildStageRecordMapper {
         }
     }
 
+    /**
+     * The processContext format is 'build-<build-id>'
+     *
+     * As such, we extract the build-id from the process context. If the process context does not start with 'build-',
+     * then just return the process context as the build id.
+     *
+     * @param processContext
+     * @return build id
+     */
+    private String buildId(String processContext) {
+
+        if (processContext.startsWith("build-")) {
+            return processContext.replace("build-", "");
+        } else {
+            return processContext;
+        }
+    }
 }
