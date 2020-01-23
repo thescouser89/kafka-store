@@ -18,9 +18,11 @@
 package org.jboss.pnc.kafkastore.common;
 
 import com.google.common.collect.ImmutableList;
+import sun.awt.image.ImageWatched;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -40,7 +42,6 @@ import java.util.List;
 public class SortedSetOrder {
 
     ArrayList<String> sorted = new ArrayList<>();
-    HashSet<String> cache = new HashSet<>();
 
     public SortedSetOrder addList(List<String> toAdd) {
 
@@ -73,7 +74,8 @@ public class SortedSetOrder {
                 finalSolution.add(toAdd.get(copiedIndex));
             }
 
-            sorted = finalSolution;
+            // just make sure that all the fields are unique
+            sorted = new ArrayList<>(new LinkedHashSet<>(finalSolution));
         }
 
         return this;
