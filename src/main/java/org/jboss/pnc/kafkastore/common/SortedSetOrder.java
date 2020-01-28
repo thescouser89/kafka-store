@@ -34,8 +34,7 @@ import java.util.List;
  *
  * Then the accepted order of the sorted set is:
  *
- * - ["a", "b", "d", "f"]  OR
- * - ["b", "a", "d", "f"]
+ * - ["a", "b", "d", "f"] OR - ["b", "a", "d", "f"]
  *
  * Items before the "d" in both lists will always be before the "d" in the final sorted list
  */
