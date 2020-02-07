@@ -42,20 +42,18 @@ public class BuildStageRecordMapper {
         try {
             KafkaMessageDTO kafkaMessageDTO = mapper.readValue(jsonString, KafkaMessageDTO.class);
 
-            if (kafkaMessageDTO.getLoggerName() != null
-                    && kafkaMessageDTO.getLoggerName().equals("org.jboss.pnc._userlog_.process-stage-update")
-                    && kafkaMessageDTO.getMdc().getProcessStageStep().equals("END")) {
+            if (kafkaMessageDTO.getMdc() != null
+                    && kafkaMessageDTO.getMdc().getProcessStageName() != null
+                    && kafkaMessageDTO.getMdc().getProcessStageStep().equals("END")
+                    && kafkaMessageDTO.getOperationTook() != null) {
 
                 BuildStageRecord buildStageRecord = new BuildStageRecord();
                 buildStageRecord.setDuration(kafkaMessageDTO.getOperationTook());
                 buildStageRecord.setTimestamp(kafkaMessageDTO.getTimestamp());
-                if (kafkaMessageDTO.getMdc() != null) {
-                    buildStageRecord.setBuildStage(kafkaMessageDTO.getMdc().getProcessStageName());
-                    buildStageRecord.setBuildId(buildId(kafkaMessageDTO.getMdc().getProcessContext()));
-                    return Optional.of(buildStageRecord);
-                } else {
-                    return Optional.empty();
-                }
+
+                buildStageRecord.setBuildStage(kafkaMessageDTO.getMdc().getProcessStageName());
+                buildStageRecord.setBuildId(buildId(kafkaMessageDTO.getMdc().getProcessContext()));
+                return Optional.of(buildStageRecord);
             } else {
                 return Optional.empty();
             }

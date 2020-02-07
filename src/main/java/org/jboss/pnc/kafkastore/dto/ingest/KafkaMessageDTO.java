@@ -36,7 +36,7 @@ public class KafkaMessageDTO {
     /**
      * Value is in milliseconds
      */
-    long operationTook;
+    Long operationTook;
     String loggerName;
 
     @JsonProperty("@timestamp")
