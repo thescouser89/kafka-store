@@ -56,12 +56,12 @@ public class Consumer {
             buildStageRecord.ifPresent(br -> {
                 log.info(br.toString());
                 CompletableFuture.runAsync(() -> store(br)).exceptionally(e -> {
-                    e.printStackTrace();
+                    log.error("Error while saving data", e);
                     return null;
                 });
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Something wrong happened during consumption", e);
         }
     }
 
