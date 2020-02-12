@@ -42,13 +42,11 @@ public class BuildStageRecordMapper {
         try {
             KafkaMessageDTO kafkaMessageDTO = mapper.readValue(jsonString, KafkaMessageDTO.class);
 
-            if (kafkaMessageDTO.getMdc() != null
-                    && kafkaMessageDTO.getMdc().getProcessStageName() != null
+            if (kafkaMessageDTO.getMdc() != null && kafkaMessageDTO.getMdc().getProcessStageName() != null
                     && kafkaMessageDTO.getMdc().getProcessContext() != null
                     && kafkaMessageDTO.getMdc().getProcessStageStep() != null
                     && kafkaMessageDTO.getMdc().getProcessStageStep().equals("END")
-                    && kafkaMessageDTO.getTimestamp() != null
-                    && kafkaMessageDTO.getOperationTook() != null) {
+                    && kafkaMessageDTO.getTimestamp() != null && kafkaMessageDTO.getOperationTook() != null) {
 
                 BuildStageRecord buildStageRecord = new BuildStageRecord();
                 buildStageRecord.setDuration(kafkaMessageDTO.getOperationTook());
