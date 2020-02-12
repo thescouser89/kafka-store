@@ -74,14 +74,15 @@ public class SortedSetOrder {
             }
 
             // just make sure that all the fields are unique
+            // handle corner-case: waiting for dependencies should always be the first metric
+            int index = finalSolution.indexOf("WAITING_FOR_DEPENDENCIES");
+            if (index > 0) {
+                finalSolution.add(0, "WAITING_FOR_DEPENDENCIES");
+                // no need to remove the one at 'index', the hash code below will remove it
+            }
+
             sorted = new ArrayList<>(new LinkedHashSet<>(finalSolution));
 
-            // handle corner-case: waiting for dependencies should always be the first metric
-            int index = sorted.indexOf("WAITING_FOR_DEPENDENCIES");
-            if (index > 0) {
-                sorted.add(0, "WAITING_FOR_DEPENDENCIES");
-                sorted.remove(index);
-            }
         }
 
         return this;
