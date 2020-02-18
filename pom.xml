@@ -21,16 +21,22 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.pnc.kafkastore</groupId>
     <artifactId>kafkastore</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <name>kafkastore</name>
+    <description>Quarkus application to dump Kafka messages into a database. A REST endpoint is also provided to query through the database.</description>
     <url>http://www.redhat.com/</url>
     <inceptionYear>2019</inceptionYear>
+
     <organization>
         <name>Red Hat, Inc.</name>
         <url>http://www.redhat.com/</url>
     </organization>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -38,6 +44,21 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <scm>
+      <connection>scm:git:https://github.com/project-ncl/kafka-store.git</connection>
+      <developerConnection>scm:git:git@github.com:project-ncl/kafka-store.git</developerConnection>
+      <url>https://github.com/project-ncl/kafka-store/</url>
+      <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+      <developer>
+        <organization>RedHat</organization>
+        <organizationUrl>http://www.redhat.com</organizationUrl>
+      </developer>
+    </developers>
+
     <properties>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
@@ -47,7 +68,10 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <version.javadoc.plugin>3.1.1</version.javadoc.plugin>
+        <pushChanges>true</pushChanges>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -59,6 +83,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -129,7 +154,37 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.8</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>io.quarkus</groupId>
@@ -198,8 +253,21 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <addSchema>false</addSchema>
+                    <arguments>-Prelease -DskipTests=${testSkip} -DpushChanges=${pushChanges}</arguments>
+                    <completionGoals>scm:add scm:checkin -DpushChanges=${pushChanges}</completionGoals>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
     <profiles>
         <profile>
             <id>native</id>
@@ -235,5 +303,47 @@
                 <quarkus.package.type>native</quarkus.package.type>
             </properties>
         </profile>
+
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${version.javadoc.plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
+
 </project>
