@@ -76,8 +76,8 @@ public class BuildStageRecordMapper {
     /**
      * The processContext format is 'build-<build-id>'
      *
-     * As such, we extract the build-id from the process context. If the process context does not start with 'build-', then just
-     * return the process context as the build id.
+     * As such, we extract the build-id from the process context. If the process context does not start with 'build-',
+     * then just return the process context as the build id.
      *
      * @param processContext
      * @return build id
