@@ -218,6 +218,7 @@
                         <exclude>**/LICENSE.txt</exclude>
                         <exclude>**/Dockerfile</exclude>
                         <exclude>**/eclipse-codeStyle.xml</exclude>
+                        <exclude>**/.cache/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
