@@ -71,7 +71,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
         <maven.compiler.parameters>true</maven.compiler.parameters>
-        <quarkus.version>1.12.2.Final</quarkus.version>
+        <quarkus.version>1.13.0.Final</quarkus.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -79,6 +79,7 @@
         <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
         <version.source.plugin>3.2.1</version.source.plugin>
         <pushChanges>true</pushChanges>
+        <quarkus.package.type>uber-jar</quarkus.package.type>
         <tagSuffix />
     </properties>
 
@@ -196,7 +197,6 @@
                 <artifactId>quarkus-maven-plugin</artifactId>
                 <version>${quarkus.version}</version>
                 <configuration>
-                    <uberJar>true</uberJar>
                     <finalName>kafka-store</finalName>
                 </configuration>
                 <executions>
