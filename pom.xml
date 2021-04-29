@@ -235,6 +235,7 @@
                         <exclude>**/LICENSE.txt</exclude>
                         <exclude>**/Dockerfile</exclude>
                         <exclude>**/eclipse-codeStyle.xml</exclude>
+                        <exclude>.github/dependabot.yml</exclude>
                     </excludes>
                 </configuration>
                 <executions>
