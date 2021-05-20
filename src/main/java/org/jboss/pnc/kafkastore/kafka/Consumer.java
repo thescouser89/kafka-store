@@ -87,6 +87,8 @@ public class Consumer {
     @Timed
     @Transactional
     void store(BuildStageRecord message) {
+        log.info("Message about to persist: {}", message);
         message.persist();
+        log.info("Message persisted: {}", message);
     }
 }
