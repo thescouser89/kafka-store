@@ -18,10 +18,8 @@
 package org.jboss.pnc.kafkastore.common;
 
 import com.google.common.collect.ImmutableList;
-import sun.awt.image.ImageWatched;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 

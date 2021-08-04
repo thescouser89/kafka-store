@@ -17,6 +17,8 @@
  */
 package org.jboss.pnc.kafkastore.kafka;
 
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
@@ -26,6 +28,7 @@ import javax.inject.Inject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusTest
+@QuarkusTestResource(H2DatabaseTestResource.class)
 class ConsumerTest {
 
     @Inject
