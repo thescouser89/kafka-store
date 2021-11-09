@@ -72,6 +72,10 @@ public class BuildStageRecordMapper {
 
                 buildStageRecord.setBuildStage(kafkaMessageDTO.getMdc().getProcessStageName());
                 buildStageRecord.setBuildId(buildId(kafkaMessageDTO.getMdc().getProcessContext()));
+
+                if (kafkaMessageDTO.getMdc().getProcessContextVariant() != null) {
+                    buildStageRecord.setProcessContextVariant(kafkaMessageDTO.getMdc().getProcessContextVariant());
+                }
                 return Optional.of(buildStageRecord);
             } else {
                 return Optional.empty();

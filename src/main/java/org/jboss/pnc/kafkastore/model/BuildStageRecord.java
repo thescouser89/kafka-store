@@ -43,6 +43,8 @@ public class BuildStageRecord extends PanacheEntity {
     long duration;
     String buildId;
 
+    String processContextVariant;
+
     Instant timestamp;
 
     public static List<BuildStageRecord> getForBuildId(String buildId) {
