@@ -48,7 +48,16 @@ public class BuildMetricsFetcher {
 
             for (BuildStageRecord buildStageRecord : buildStageRecordList) {
                 metric.add(buildStageRecord.getBuildStage());
-                cache.put(getKeyForCache(id, buildStageRecord.getBuildStage()), buildStageRecord.getDuration());
+
+                // if step is not in cache, put duration
+                cache.computeIfAbsent(
+                        getKeyForCache(id, buildStageRecord.getBuildStage()),
+                        key -> buildStageRecord.getDuration());
+
+                // if step is already in cache, add to the existing duration
+                cache.computeIfPresent(
+                        getKeyForCache(id, buildStageRecord.getBuildStage()),
+                        (key, value) -> value + buildStageRecord.getDuration());
             }
             sortedSet.addList(metric);
         }

@@ -33,7 +33,7 @@ class BuildStageRecordTest {
 
         String buildId = "5";
         for (int i = 0; i < 15; i++) {
-            createBuildStageRecordWithBuildId(buildId, "test", 123);
+            createBuildStageRecordWithBuildId(buildId, "test", 123, "processVariant");
         }
         assertThat(BuildStageRecord.getForBuildId("5")).hasSize(15);
     }
@@ -42,11 +42,16 @@ class BuildStageRecordTest {
     // Helper methods
     // *****************************************************************************************************************
     @Transactional
-    void createBuildStageRecordWithBuildId(String buildId, String buildStage, int duration) {
+    void createBuildStageRecordWithBuildId(
+            String buildId,
+            String buildStage,
+            int duration,
+            String processContextVariant) {
         BuildStageRecord a = new BuildStageRecord();
         a.buildId = buildId;
         a.buildStage = buildStage;
         a.duration = duration;
+        a.processContextVariant = processContextVariant;
         a.persist();
     }
 

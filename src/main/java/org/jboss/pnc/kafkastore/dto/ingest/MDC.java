@@ -31,6 +31,7 @@ public class MDC {
 
     String processContext;
     String requestContext;
+    String processContextVariant;
 
     @JsonProperty("process_stage_name")
     String processStageName;
