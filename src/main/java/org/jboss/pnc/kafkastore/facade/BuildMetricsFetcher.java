@@ -47,17 +47,19 @@ public class BuildMetricsFetcher {
             List<String> metric = new LinkedList<>();
 
             for (BuildStageRecord buildStageRecord : buildStageRecordList) {
-                metric.add(buildStageRecord.getBuildStage());
-
-                // if step is not in cache, put duration
-                cache.computeIfAbsent(
-                        getKeyForCache(id, buildStageRecord.getBuildStage()),
-                        key -> buildStageRecord.getDuration());
 
                 // if step is already in cache, add to the existing duration
                 cache.computeIfPresent(
                         getKeyForCache(id, buildStageRecord.getBuildStage()),
                         (key, value) -> value + buildStageRecord.getDuration());
+
+                // if step is not in cache, put duration
+                cache.computeIfAbsent(getKeyForCache(id, buildStageRecord.getBuildStage()), key -> {
+                    // only add build stage if not yet present
+                    metric.add(buildStageRecord.getBuildStage());
+                    System.out.println(buildStageRecord.getBuildStage() + ":" + buildStageRecord.getDuration());
+                    return buildStageRecord.getDuration();
+                });
             }
             sortedSet.addList(metric);
         }
