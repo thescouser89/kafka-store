@@ -27,7 +27,6 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.time.Duration;
 
 @ApplicationScoped
 @Slf4j
@@ -41,8 +40,15 @@ public class KafkaMessageGenerator {
     @Outgoing("duration")
     public Multi<String> generate() {
 
-        return Multi.createFrom().ticks().every(Duration.ofMillis(200)).map(tick -> {
+        // run it for about 2000 milliseconds
+        return Multi.createFrom().range(0, 10).map(tick -> {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             KafkaMessageDTO kafkaMessageDTO = factory.manufacturePojo(KafkaMessageDTO.class);
+            kafkaMessageDTO.getMdc().setProcessContext("consumer-testing");
             kafkaMessageDTO.setLoggerName("org.jboss.pnc._userlog_.process-stage-update");
             kafkaMessageDTO.getMdc().setProcessStageStep("END");
             try {
