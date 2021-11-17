@@ -38,7 +38,7 @@ class ConsumerTest {
     void consumeTest() throws Exception {
         // wait for some messages to be consumed
         Thread.sleep(3000);
-        assertThat(BuildStageRecord.count()).isNotZero();
+        assertThat(BuildStageRecord.getForBuildId("consumer-testing")).isNotEmpty();
     }
 
 }

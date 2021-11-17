@@ -127,10 +127,4 @@ class BuildStageRecordTest {
         a.processContextVariant = processContextVariant;
         a.persist();
     }
-
-    @Transactional
-    @AfterEach
-    void cleanup() {
-        BuildStageRecord.deleteAll();
-    }
 }

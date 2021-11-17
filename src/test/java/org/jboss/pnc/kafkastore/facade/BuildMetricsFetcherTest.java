@@ -42,13 +42,13 @@ class BuildMetricsFetcherTest {
 
     @Test
     void testNoDuplicateMetrics() {
-        createBuildStageRecordWithBuildId("1234", "TEST", 1000, "0");
-        createBuildStageRecordWithBuildId("1234", "TEST", 2000, "1");
-        createBuildStageRecordWithBuildId("1234", "TEST", 3000, "2");
-        createBuildStageRecordWithBuildId("1234", "DONE", 10, "0");
+        createBuildStageRecordWithBuildId("1234-duplicate", "TEST", 1000, "0");
+        createBuildStageRecordWithBuildId("1234-duplicate", "TEST", 2000, "1");
+        createBuildStageRecordWithBuildId("1234-duplicate", "TEST", 3000, "2");
+        createBuildStageRecordWithBuildId("1234-duplicate", "DONE", 10, "0");
 
         BuildIdDTO buildIdDTO = new BuildIdDTO();
-        buildIdDTO.setBuildIds(Lists.list("1234"));
+        buildIdDTO.setBuildIds(Lists.list("1234-duplicate"));
         List<BuildMetricDTO> response = fetcher.getMetricForBuildIds(buildIdDTO);
 
         Set<String> metric = new HashSet<>();
@@ -78,11 +78,5 @@ class BuildMetricsFetcherTest {
         a.setDuration(duration);
         a.setProcessContextVariant(processContextVariant);
         a.persist();
-    }
-
-    @Transactional
-    @AfterEach
-    void cleanup() {
-        BuildStageRecord.deleteAll();
     }
 }
