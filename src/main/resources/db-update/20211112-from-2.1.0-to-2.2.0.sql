@@ -19,6 +19,6 @@
 -- [NCL-6817] - Create REST APIs in Kafka-store for pnc-build-insights service
 BEGIN transaction;
     ALTER TABLE buildstagerecord ADD COLUMN lastupdatetime timestamptz;
-    UPDATE buildstagerecord set lastupdatetime = "timestamp";
+    UPDATE buildstagerecord set lastupdatetime = timestamp;
     CREATE INDEX idx_lastupdate_time ON buildstagerecord (lastupdatetime);
 COMMIT;
