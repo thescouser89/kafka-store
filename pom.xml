@@ -210,6 +210,8 @@
                 <version>${quarkus.version}</version>
                 <configuration>
                     <finalName>kafka-store</finalName>
+                    <!-- needed to publish to maven central -->
+                    <skipOriginalJarRename>true</skipOriginalJarRename>
                 </configuration>
                 <executions>
                     <execution>
