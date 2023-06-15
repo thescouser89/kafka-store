@@ -18,6 +18,7 @@
 package org.jboss.pnc.kafkastore.rest;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -29,6 +30,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jboss.pnc.api.dto.ComponentVersion;
+import org.jboss.pnc.kafkastore.Constants;
 import org.jboss.pnc.kafkastore.dto.rest.BuildIdDTO;
 import org.jboss.pnc.kafkastore.dto.rest.BuildMetricDTO;
 import org.jboss.pnc.kafkastore.dto.rest.PagedBuildStageRecordDTO;
@@ -41,6 +45,9 @@ import io.micrometer.core.annotation.Timed;
 @Path("/")
 @ApplicationScoped
 public class MainRest {
+
+    @ConfigProperty(name = "quarkus.application.name")
+    String name;
 
     @Inject
     BuildMetricsFetcher buildMetricsFetcher;
@@ -70,4 +77,16 @@ public class MainRest {
         return buildStageRecordFetcher
                 .findBuildStageRecordNewerThan(Instant.ofEpochMilli(timestamp), pageIndex, pageSize);
     }
+
+    @GET
+    @Path("rest/version")
+    public ComponentVersion getVersion() {
+        return ComponentVersion.builder()
+                .name(name)
+                .version(Constants.KAFKA_STORE_VERSION)
+                .commit(Constants.COMMIT_HASH)
+                .builtOn(ZonedDateTime.parse(Constants.BUILD_TIME))
+                .build();
+    }
+
 }
