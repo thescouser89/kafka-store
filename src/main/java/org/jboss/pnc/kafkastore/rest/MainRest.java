@@ -79,7 +79,7 @@ public class MainRest {
     }
 
     @GET
-    @Path("rest/version")
+    @Path("/version")
     public ComponentVersion getVersion() {
         return ComponentVersion.builder()
                 .name(name)
