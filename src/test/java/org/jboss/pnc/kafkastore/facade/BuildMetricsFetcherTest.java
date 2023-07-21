@@ -25,8 +25,8 @@ import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.util.HashSet;
 import java.util.List;

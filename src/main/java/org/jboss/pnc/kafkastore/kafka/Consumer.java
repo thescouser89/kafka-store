@@ -23,18 +23,18 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import io.smallrye.common.annotation.Blocking;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.pnc.kafkastore.mapper.BuildStageRecordMapper;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.PersistenceException;
-import javax.transaction.TransactionManager;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
