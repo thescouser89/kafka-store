@@ -18,21 +18,7 @@
 package org.jboss.pnc.kafkastore.rest;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.jboss.pnc.kafkastore.model.BuildStageRecord;
-
-import jakarta.transaction.Transactional;
-
-import java.time.Instant;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
 @Disabled
