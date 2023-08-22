@@ -25,9 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.Instant;
 import java.util.List;
 
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.pnc.kafkastore.dto.rest.BuildStageRecordDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -66,7 +65,7 @@ class BuildStageRecordTest {
         // then
         assertThatThrownBy(() -> createBuildStageRecordWithBuildId("1", "test", 123, "processVariant", now)).getCause() // javax.transaction.RollbackException
                 .getCause() // javax.persistence.PersistenceException
-                .hasCauseInstanceOf(JdbcSQLIntegrityConstraintViolationException.class);
+                .hasCauseInstanceOf(ConstraintViolationException.class);
     }
 
     @Test

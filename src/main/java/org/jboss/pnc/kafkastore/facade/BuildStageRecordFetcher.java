@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.ApplicationScoped;
 
 import org.jboss.pnc.kafkastore.dto.rest.BuildStageRecordDTO;
 import org.jboss.pnc.kafkastore.dto.rest.PagedBuildStageRecordDTO;
