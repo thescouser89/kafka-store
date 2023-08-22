@@ -26,7 +26,7 @@ import org.jboss.pnc.kafkastore.dto.rest.BuildIdDTO;
 import org.jboss.pnc.kafkastore.dto.rest.BuildMetricDTO;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.ApplicationScoped;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;

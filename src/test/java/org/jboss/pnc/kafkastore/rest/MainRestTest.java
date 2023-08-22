@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 
 import java.time.Instant;
 
