@@ -22,6 +22,7 @@ import org.assertj.core.util.Lists;
 import org.jboss.pnc.kafkastore.dto.rest.BuildIdDTO;
 import org.jboss.pnc.kafkastore.dto.rest.BuildMetricDTO;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import jakarta.inject.Inject;
@@ -31,8 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 class BuildMetricsFetcherTest {
