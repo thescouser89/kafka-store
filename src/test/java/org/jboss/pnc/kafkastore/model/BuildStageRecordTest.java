@@ -27,7 +27,6 @@ import java.util.List;
 
 import jakarta.transaction.Transactional;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.pnc.kafkastore.dto.rest.BuildStageRecordDTO;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

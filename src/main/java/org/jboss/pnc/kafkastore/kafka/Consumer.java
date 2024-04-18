@@ -33,10 +33,8 @@ import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
-import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Consume from a Kafka topic, parse the data and store it in the database
