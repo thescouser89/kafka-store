@@ -22,7 +22,6 @@ import org.assertj.core.util.Lists;
 import org.jboss.pnc.kafkastore.dto.rest.BuildIdDTO;
 import org.jboss.pnc.kafkastore.dto.rest.BuildMetricDTO;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import jakarta.inject.Inject;
