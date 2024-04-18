@@ -23,13 +23,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.pnc.kafkastore.dto.ingest.KafkaMessageDTO;
 import org.jboss.pnc.kafkastore.model.BuildStageRecord;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Optional;
 

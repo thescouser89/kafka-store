@@ -25,11 +25,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.Instant;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.pnc.kafkastore.dto.rest.BuildStageRecordDTO;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.base.Optional;
 
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -63,9 +61,9 @@ class BuildStageRecordTest {
         createBuildStageRecordWithBuildId("1", "test", 123, "processVariant", now);
 
         // then
-        assertThatThrownBy(() -> createBuildStageRecordWithBuildId("1", "test", 123, "processVariant", now)).getCause() // javax.transaction.RollbackException
-                .getCause() // javax.persistence.PersistenceException
-                .hasCauseInstanceOf(ConstraintViolationException.class);
+        assertThatThrownBy(() -> createBuildStageRecordWithBuildId("1", "test", 123, "processVariant", now)).cause() // jakarta.transaction.RollbackException
+                .cause() // jakarta.persistence.PersistenceException
+                .hasCauseInstanceOf(org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException.class);
     }
 
     @Test

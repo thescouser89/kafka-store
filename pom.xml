@@ -71,7 +71,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
         <maven.compiler.parameters>true</maven.compiler.parameters>
-        <quarkus.version>2.16.12.Final</quarkus.version>
+        <quarkus.version>3.9.4</quarkus.version>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -98,19 +98,11 @@
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy</artifactId>
+            <artifactId>quarkus-rest-jackson</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jackson</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -144,6 +136,7 @@
             <groupId>org.jboss.pnc</groupId>
             <artifactId>pnc-api</artifactId>
             <version>2.5.1</version>
+            <classifier>jakarta</classifier>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
