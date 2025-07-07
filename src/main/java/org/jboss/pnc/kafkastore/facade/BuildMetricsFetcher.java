@@ -18,8 +18,8 @@
 package org.jboss.pnc.kafkastore.facade;
 
 import io.micrometer.core.annotation.Timed;
-import io.opentelemetry.extension.annotations.SpanAttribute;
-import io.opentelemetry.extension.annotations.WithSpan;
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.pnc.kafkastore.common.SortedSetOrder;
 import org.jboss.pnc.kafkastore.dto.rest.BuildIdDTO;
