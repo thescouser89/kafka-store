@@ -23,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.pnc.kafkastore</groupId>
     <artifactId>kafkastore</artifactId>
-    <version>3.2.3-SNAPSHOT</version>
+    <version>3.3.0-SNAPSHOT</version>
 
     <name>kafkastore</name>
     <description>Quarkus application to dump Kafka messages into a database. A REST endpoint is also provided to query through the database.</description>
