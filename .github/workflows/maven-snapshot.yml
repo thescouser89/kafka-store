@@ -46,6 +46,8 @@ jobs:
 
     - name: copy artifact to the container folder
       run: cp target/kafka-store-runner.jar container
+    - name: list the files
+      run: ls -alh container
 
     - name: Build the container image
       id: build-image
