@@ -43,3 +43,15 @@ jobs:
     - name: Deploy Snapshot
       if:  ${{ endsWith(steps.project-version.outputs.version, '-SNAPSHOT') }}
       run: mvn -B -V org.apache.maven.plugins:maven-source-plugin:jar-no-fork deploy
+
+    - name: copy artifact to the container folder
+      run: cp target/kafka-store-runner.jar container
+
+    - name: Build the container image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: kafka-store
+        tags: latest ${{ github.sha }}
+        containerfiles: |
+          ./container/Containerfile
