@@ -25,7 +25,7 @@ jobs:
         githubServer: false
         servers: |
             [{
-                "id": "central",
+                "id": "central-publisher",
                 "username": "${{ secrets.SONATYPE_USERNAME }}",
                 "password": "${{ secrets.SONATYPE_PASSWORD }}"
             }]
