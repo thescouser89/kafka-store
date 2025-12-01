@@ -46,27 +46,32 @@ jobs:
       if:  ${{ endsWith(steps.project-version.outputs.version, '-SNAPSHOT') }}
       run: mvn -B -V org.apache.maven.plugins:maven-source-plugin:jar-no-fork deploy
 
-    - name: copy artifact to the container folder
-      run: cp target/kafka-store-runner.jar container
-
-    - name: Build the container image
+    - name: Build the container image using jib
+    # need to define: QUARKUS_CONTAINER_IMAGE_USERNAME and QUARKUS_CONTAINER_IMAGE_PASSWORD
       id: build-image
-      uses: redhat-actions/buildah-build@v2
-      with:
-        image: kafka-store-github-test
-        tags: latest ${{ github.sha }}
-        containerfiles: |
-          ./container/Containerfile
+      run: mvn install -DskipTests=true -Dquarkus.container-image.build=true
 
-    - name: Push To quay.io
-      id: push-to-quay
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        image: ${{ steps.build-image.outputs.image }}
-        tags: ${{ steps.build-image.outputs.tags }}
-        registry: quay.io/rh-newcastle-devel
-        username: ${{ secrets.QUAY_NEWCASTLE_DEVEL_USER }}
-        password: ${{ secrets.QUAY_NEWCASTLE_DEVEL_PASSWORD }}
+#     - name: copy artifact to the container folder
+#       run: cp target/kafka-store-runner.jar container
 
-    - name: Print image url
-      run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
+#     - name: Build the container image
+#       id: build-image
+#       uses: redhat-actions/buildah-build@v2
+#       with:
+#         image: kafka-store-github-test
+#         tags: latest ${{ github.sha }}
+#         containerfiles: |
+#           ./container/Containerfile
+# 
+#     - name: Push To quay.io
+#       id: push-to-quay
+#       uses: redhat-actions/push-to-registry@v2
+#       with:
+#         image: ${{ steps.build-image.outputs.image }}
+#         tags: ${{ steps.build-image.outputs.tags }}
+#         registry: quay.io/rh-newcastle-devel
+#         username: ${{ secrets.QUAY_NEWCASTLE_DEVEL_USER }}
+#         password: ${{ secrets.QUAY_NEWCASTLE_DEVEL_PASSWORD }}
+
+#     - name: Print image url
+#       run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
