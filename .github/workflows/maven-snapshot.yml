@@ -49,7 +49,7 @@ jobs:
     - name: Build the container image using jib
     # need to define: QUARKUS_CONTAINER_IMAGE_USERNAME and QUARKUS_CONTAINER_IMAGE_PASSWORD
       id: build-image
-      run: mvn install -DskipTests=true -Dquarkus.container-image.build=true
+      run: mvn install -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true
 
 #     - name: copy artifact to the container folder
 #       run: cp target/kafka-store-runner.jar container
