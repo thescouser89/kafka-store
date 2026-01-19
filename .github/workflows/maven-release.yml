@@ -6,7 +6,8 @@ on:
         description: 'Branch or commit to release. Default: Github default branch'
         required: false
         type: string
-        default: '${{ github.event.repository.default_branch }}'
+        # default has to be a static string, no variables allowed
+        default: ''
 
       java_version:
         description: 'The Java version to use to compile. Default: 21'
@@ -29,13 +30,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write # Allows pushing tags and commits. release plugin uses this
+
+    env:
+      # Logic: Use the user input if provided, otherwise fall back to the repo's default branch
+      FINAL_REF: ${{ github.event.inputs.ref_to_release || github.event.repository.default_branch }}
 
     steps:
     - uses: actions/checkout@v6
       with:
-        ref: '${{ inputs.ref_to_release }}'
+        ref: '${{ env.FINAL_REF }}'
 
     - name: Configure Git User
       run: |
