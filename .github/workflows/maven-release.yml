@@ -19,15 +19,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allows pushing tags and commits. release plugin uses this
 
     steps:
     - uses: actions/checkout@v6
+    - name: Configure Git User
+      run: |
+        # This sets the name and email for the commits
+        git config --global user.name "github-actions[bot]"
+        # official github action email
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
     - name: Set up JDK '${{ inputs.java_version }}'
       uses: actions/setup-java@v5
       with:
         java-version: '${{ inputs.java_version }}'
         distribution: 'temurin'
+        cache: maven
         server-id: central-publisher    # Matches the ID in your pom's distributionManagement
         server-username: MAVEN_USERNAME # Env variable name
         server-password: MAVEN_PASSWORD # env var secret
