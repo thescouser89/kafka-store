@@ -1,0 +1,45 @@
+name: Central Release
+on:
+  workflow_dispatch: # Manual trigger so you don't release on every push
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+      java_version:
+        description: 'The Java version to use to compile. Default: 21'
+        required: false
+        type: string
+        default: '21' # Java 21 is the default
+      build_command:
+        description: 'The build command to use. Default: mvn'
+        required: false
+        type: string
+        default: 'mvn -B package --file pom.xml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Set up JDK '${{ inputs.java_version }}'
+      uses: actions/setup-java@v5
+      with:
+        java-version: '${{ inputs.java_version }}'
+        distribution: 'temurin'
+        server-id: central-publisher    # Matches the ID in your pom's distributionManagement
+        server-username: MAVEN_USERNAME # Env variable name
+        server-password: MAVEN_PASSWORD # env var secret
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+        gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+    - name: Publish to Central
+      run: |
+        mvn versions:set -DnewVersion=${{ inputs.version }}
+        mvn clean deploy -P release -B
+      env:
+        MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
