@@ -2,14 +2,18 @@ name: Central Release
 on:
   workflow_dispatch: # Manual trigger so you don't release on every push
     inputs:
-      version:
-        description: 'Version to release'
-        required: true
+      ref_to_release:
+        description: 'Branch or commit to release. Default: Github default branch'
+        required: false
+        type: string
+        default: '${{ github.event.repository.default_branch }}'
+
       java_version:
         description: 'The Java version to use to compile. Default: 21'
         required: false
         type: string
         default: '21' # Java 21 is the default
+
       release_command:
         description: 'The build command to use. Default: mvn'
         required: false
@@ -30,6 +34,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        ref: '${{ inputs.ref_to_release }}'
+
     - name: Configure Git User
       run: |
         # This sets the name and email for the commits
