@@ -10,11 +10,11 @@ on:
         required: false
         type: string
         default: '21' # Java 21 is the default
-      build_command:
+      release_command:
         description: 'The build command to use. Default: mvn'
         required: false
         type: string
-        default: 'mvn -B package --file pom.xml'
+        default: 'mvn -B -V release:prepare release:perform'
 
 jobs:
   build:
@@ -35,11 +35,8 @@ jobs:
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
     - name: Publish to Central
-      run: |
-        mvn versions:set -DnewVersion=${{ inputs.version }}
-        mvn clean deploy -P release -B
+      run: ${{ inputs.release_command }}
       env:
-        MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
-        MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
+        MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
