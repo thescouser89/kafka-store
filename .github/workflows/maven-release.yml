@@ -10,7 +10,7 @@ on:
         default: ''
 
 jobs:
-    call-snapshot-job:
+    call-release-job:
       uses: project-ncl/shared-github-actions/.github/workflows/maven-release.yml@main
       with:
         ref_to_release: ${{ inputs.ref_to_release }}
