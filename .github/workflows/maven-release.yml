@@ -11,7 +11,7 @@ on:
 
 jobs:
     call-snapshot-job:
-      uses: project-ncl/shared-github-actions/.github/workflows/maven-release.yml
+      uses: project-ncl/shared-github-actions/.github/workflows/maven-release.yml@main
       with:
         ref_to_release: ${{ inputs.ref_to_release }}
       secrets:
