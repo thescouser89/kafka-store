@@ -14,7 +14,13 @@ on:
         description: 'The build command to use. Default: mvn'
         required: false
         type: string
-        default: 'mvn -B -V release:prepare release:perform'
+        # localCheckout: don't clone the repo again during release
+        #
+        # pushChanges: don't push git changes to upstream due to requirement
+        #              to use git@github.com :: we don't have ssh setup here
+        #              and instead uses https://github.com + github token.
+        #              We'll manually push it later
+        default: 'mvn -B -V release:prepare release:perform -DlocalCheckout=true -DpushChanges=false'
 
 jobs:
   build:
@@ -43,20 +49,12 @@ jobs:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-    - name: Force HTTPS instead of SSH
-      run: |
-        # our pom.xml enforce using the ssh url
-        # However, github-actions doesn't have ssh keys setup and instead uses
-        # github token keys with https
-        #
-        # This tricks maven to believe it is using ssh url when in fact it is
-        # using https under the hood
-        git config --global url."https://github.com/".insteadOf "git@github.com:"
-        git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
-
     - name: Publish to Central
       run: ${{ inputs.release_command }}
       env:
         MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+    - name: Push all the git commits and tags back to the repository
+      run: git push && git push --tags
