@@ -8,7 +8,7 @@ on:
 
 jobs:
     call-snapshot-job:
-      uses: project-ncl/shared-github-actions/.github/workflows/maven-snapshot.yml@a17b7b6137314ab03748ec20e2d21d1434721ea0 # main
+      uses: project-ncl/shared-github-actions/.github/workflows/maven-snapshot.yml@484bf5d0ea533a65257bbefc40a4db309f559dd5 # main
       with:
         project_name: 'project-ncl/kafka-store'
         quarkus_jib_image: true
