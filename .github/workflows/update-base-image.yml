@@ -1,0 +1,104 @@
+name: Update Jib Base Image
+
+on:
+  schedule:
+    # Run weekly on Mondays at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Check for new base image digest
+        id: check-image
+        run: |
+          # Extract current values from pom.xml
+          CURRENT_VERSION=$(grep -oP '<jib.base.image.version>\K[^<]+' pom.xml)
+          CURRENT_DIGEST=$(grep -oP '<jib.base.image.digest>\K[^<]+' pom.xml)
+
+          IMAGE="registry.access.redhat.com/ubi10/openjdk-21-runtime"
+
+          echo "Current version: $CURRENT_VERSION"
+          echo "Current digest: $CURRENT_DIGEST"
+
+          # Get the latest digest for the current tag
+          # Use skopeo to inspect the image without pulling it
+          sudo apt-get update && sudo apt-get install -y skopeo
+
+          NEW_DIGEST=$(skopeo inspect "docker://${IMAGE}:${CURRENT_VERSION}" | jq -r '.Digest')
+
+          echo "Latest digest: $NEW_DIGEST"
+
+          # Check if digest has changed
+          if [ "$CURRENT_DIGEST" != "$NEW_DIGEST" ]; then
+            echo "Digest has changed!"
+            {
+              echo "update_needed=true"
+              echo "new_digest=$NEW_DIGEST"
+              echo "current_version=$CURRENT_VERSION"
+              echo "current_digest=$CURRENT_DIGEST"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "Digest is up to date"
+            echo "update_needed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update pom.xml
+        if: steps.check-image.outputs.update_needed == 'true'
+        env:
+          NEW_DIGEST: ${{ steps.check-image.outputs.new_digest }}
+        run: |
+          # Update the digest in pom.xml
+          sed -i "s|<jib.base.image.digest>.*</jib.base.image.digest>|<jib.base.image.digest>${NEW_DIGEST}</jib.base.image.digest>|" pom.xml
+
+          echo "Updated pom.xml with new digest"
+
+      - name: Create Pull Request
+        if: steps.check-image.outputs.update_needed == 'true'
+        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            Update Jib base image digest
+
+            Update openjdk-21-runtime:${{ steps.check-image.outputs.current_version }} digest
+
+            Previous digest: ${{ steps.check-image.outputs.current_digest }}
+            New digest: ${{ steps.check-image.outputs.new_digest }}
+          branch: update-jib-base-image-digest
+          delete-branch: true
+          title: 'chore: Update Jib base image digest for openjdk-21-runtime:${{ steps.check-image.outputs.current_version }}'
+          body: |
+            ## Base Image Digest Update
+
+            This PR updates the SHA256 digest for the Jib base image to ensure we're using the latest patched version.
+
+            **Image:** `registry.access.redhat.com/ubi10/openjdk-21-runtime:${{ steps.check-image.outputs.current_version }}`
+
+            **Changes:**
+            - Previous digest: `${{ steps.check-image.outputs.current_digest }}`
+            - New digest: `${{ steps.check-image.outputs.new_digest }}`
+
+            This is an automated PR created by the Update Jib Base Image workflow.
+
+            ### Verification
+
+            The digest change typically indicates:
+            - Security patches
+            - Bug fixes
+            - Minor updates to the base OS
+
+            Please review the [Red Hat Container Catalog](https://catalog.redhat.com/software/containers/ubi10/openjdk-21-runtime) for release notes.
+          labels: |
+            dependencies
+            automated
