@@ -70,6 +70,13 @@
         <version.source.plugin>3.4.0</version.source.plugin>
         <pushChanges>true</pushChanges>
         <quarkus.package.type>uber-jar</quarkus.package.type>
+        <!--
+           - we specify both version and digest so that dependabot updates
+           - both. The version is great for humans, the digest great for
+           - pinning the version properly
+          -->
+        <jib.base.image.version>1.24-1</jib.base.image.version>
+        <jib.base.image.digest>sha256:356969edbdcdb64289160bb3b3e80760f9f35738085837d53e2bd42886a21d1b</jib.base.image.digest>
         <tagSuffix />
     </properties>
 
@@ -188,6 +195,11 @@
                 <extensions>true</extensions>
                 <configuration>
                     <finalName>kafka-store</finalName>
+                    <systemProperties>
+                        <quarkus.jib.base-jvm-image>
+                            registry.access.redhat.com/ubi10/openjdk-21-runtime:${jib.base.image.version}@${jib.base.image.digest}
+                        </quarkus.jib.base-jvm-image>
+                    </systemProperties>
                 </configuration>
                 <executions>
                     <execution>
