@@ -19,7 +19,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Check for new base image digest
+      - name: Check for new base image version and digest
         id: check-image
         run: |
           # Extract current values from pom.xml
@@ -31,37 +31,53 @@ jobs:
           echo "Current version: $CURRENT_VERSION"
           echo "Current digest: $CURRENT_DIGEST"
 
-          # Get the latest digest for the current tag
-          # Use skopeo to inspect the image without pulling it
+          # Install skopeo to inspect images
           sudo apt-get update && sudo apt-get install -y skopeo
 
-          NEW_DIGEST=$(skopeo inspect "docker://${IMAGE}:${CURRENT_VERSION}" | jq -r '.Digest')
+          # Get all available tags for the image
+          ALL_TAGS=$(skopeo list-tags "docker://${IMAGE}" | jq -r '.Tags[]')
 
-          echo "Latest digest: $NEW_DIGEST"
+          # Filter for tags matching the pattern X.YY-Z (e.g., 1.24-1, 1.25-2)
+          # Sort by version number and get the latest
+          LATEST_VERSION=$(echo "$ALL_TAGS" | grep -E '^[0-9]+\.[0-9]+-[0-9]+$' | sort -V | tail -n1)
 
-          # Check if digest has changed
-          if [ "$CURRENT_DIGEST" != "$NEW_DIGEST" ]; then
-            echo "Digest has changed!"
+          echo "Latest available version: $LATEST_VERSION"
+
+          # Get the digest for the latest version
+          LATEST_DIGEST=$(skopeo inspect "docker://${IMAGE}:${LATEST_VERSION}" | jq -r '.Digest')
+
+          echo "Latest digest: $LATEST_DIGEST"
+
+          # Check if version or digest has changed
+          if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ] || [ "$CURRENT_DIGEST" != "$LATEST_DIGEST" ]; then
+            echo "Update needed!"
+            VERSION_CHANGED=$([[ "$CURRENT_VERSION" != "$LATEST_VERSION" ]] && echo "true" || echo "false")
             {
               echo "update_needed=true"
-              echo "new_digest=$NEW_DIGEST"
+              echo "new_version=$LATEST_VERSION"
+              echo "new_digest=$LATEST_DIGEST"
               echo "current_version=$CURRENT_VERSION"
               echo "current_digest=$CURRENT_DIGEST"
+              echo "version_changed=$VERSION_CHANGED"
             } >> "$GITHUB_OUTPUT"
           else
-            echo "Digest is up to date"
+            echo "Version and digest are up to date"
             echo "update_needed=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Update pom.xml
         if: steps.check-image.outputs.update_needed == 'true'
         env:
+          NEW_VERSION: ${{ steps.check-image.outputs.new_version }}
           NEW_DIGEST: ${{ steps.check-image.outputs.new_digest }}
         run: |
+          # Update the version in pom.xml
+          sed -i "s|<jib.base.image.version>.*</jib.base.image.version>|<jib.base.image.version>${NEW_VERSION}</jib.base.image.version>|" pom.xml
+
           # Update the digest in pom.xml
           sed -i "s|<jib.base.image.digest>.*</jib.base.image.digest>|<jib.base.image.digest>${NEW_DIGEST}</jib.base.image.digest>|" pom.xml
 
-          echo "Updated pom.xml with new digest"
+          echo "Updated pom.xml with new version and digest"
 
       - name: Create Pull Request
         if: steps.check-image.outputs.update_needed == 'true'
@@ -69,36 +85,35 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: |
-            Update Jib base image digest
+            Update Jib base image to ${{ steps.check-image.outputs.new_version }}
 
-            Update openjdk-21-runtime:${{ steps.check-image.outputs.current_version }} digest
+            Update openjdk-21-runtime from ${{ steps.check-image.outputs.current_version }} to ${{ steps.check-image.outputs.new_version }}
 
             Previous digest: ${{ steps.check-image.outputs.current_digest }}
             New digest: ${{ steps.check-image.outputs.new_digest }}
-          branch: update-jib-base-image-digest
+          branch: update-jib-base-image
           delete-branch: true
-          title: 'chore: Update Jib base image digest for openjdk-21-runtime:${{ steps.check-image.outputs.current_version }}'
+          title: 'chore: Update Jib base image to openjdk-21-runtime:${{ steps.check-image.outputs.new_version }}'
           body: |
-            ## Base Image Digest Update
+            ## Base Image Update
 
-            This PR updates the SHA256 digest for the Jib base image to ensure we're using the latest patched version.
+            This PR updates the Jib base image to the latest available version.
 
-            **Image:** `registry.access.redhat.com/ubi10/openjdk-21-runtime:${{ steps.check-image.outputs.current_version }}`
+            **Image:** `registry.access.redhat.com/ubi10/openjdk-21-runtime`
 
             **Changes:**
+            - Previous version: `${{ steps.check-image.outputs.current_version }}`
+            - New version: `${{ steps.check-image.outputs.new_version }}`
             - Previous digest: `${{ steps.check-image.outputs.current_digest }}`
             - New digest: `${{ steps.check-image.outputs.new_digest }}`
+
+            ${{ steps.check-image.outputs.version_changed == 'true' && '**Version Update**: This update includes a new version of the base image, which may include significant updates, security patches, and bug fixes.' || '**Digest Update**: This update only changes the digest for the same version, typically indicating security patches or minor OS updates.' }}
 
             This is an automated PR created by the Update Jib Base Image workflow.
 
             ### Verification
 
-            The digest change typically indicates:
-            - Security patches
-            - Bug fixes
-            - Minor updates to the base OS
-
-            Please review the [Red Hat Container Catalog](https://catalog.redhat.com/software/containers/ubi10/openjdk-21-runtime) for release notes.
+            Please review the [Red Hat Container Catalog](https://catalog.redhat.com/software/containers/ubi10/openjdk-21-runtime) for release notes and changelogs.
           labels: |
             dependencies
             automated
