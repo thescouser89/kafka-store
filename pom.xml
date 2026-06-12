@@ -69,7 +69,9 @@
         <version.javadoc.plugin>3.12.0</version.javadoc.plugin>
         <version.source.plugin>3.4.0</version.source.plugin>
         <pushChanges>true</pushChanges>
-        <quarkus.package.type>uber-jar</quarkus.package.type>
+        <!--
+           - <quarkus.package.type>uber-jar</quarkus.package.type>
+           -->
         <!--
            - we specify both version and digest so that dependabot updates
            - both. The version is great for humans, the digest great for
