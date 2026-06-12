@@ -32,5 +32,5 @@ echo "Datasource url: ${QUARKUS_DATASOURCE_JDBC_URL}"
 export KAFKA_JAAS_CONFIG="$(cat ${SECRETS_PATH}/${KAFKA_CLIENT_SECRET_NAME}-${APP_ENV}/kafka_jaas_conf)"
 
 java \
-    -Djava.util.logging.manager=org.jboss.logmanager.LogManager
+    -Djava.util.logging.manager=org.jboss.logmanager.LogManager \
     -jar quarkus-run.jar
